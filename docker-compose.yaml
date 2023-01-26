@@ -1,0 +1,29 @@
+version: "2.2"
+services:
+  backend:
+    image: flowvoyager # name of the built image
+    container_name: FlowVoyager_33080 # name of the node-red container
+    mem_limit: 1500m
+    restart: unless-stopped # always restarts (see overview page 12 Industrial Edge Developer Guide)
+    environment:
+      - DOCKER_HOST=tcp://host.docker.internal:2375
+    privileged: true
+    build:
+      context: ./
+    ports:
+      - "33080:3000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"   # container and host   
+    networks:                                 # define networks connected to 
+      proxy-redirect:   
+                        
+# Name of the network
+####### NETWORK CONFIG ######
+networks:
+  #Network interface configuration
+  proxy-redirect:
+    # Reference 'proxy-redirect' as predefined network
+    external:
+      # Note: Please create the network manually as it is preexisting on Industrial Edge Device
+      name: proxy-redirect
+    driver: bridge

@@ -1,0 +1,454 @@
+[
+    {
+        "id": "d174c87febf19daa",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "a97c989b840e71e2",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "f0bcc0f68da8658c",
+        "type": "tab",
+        "label": "Flow 3",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "dbdccd8808144711",
+        "type": "debug",
+        "z": "d174c87febf19daa",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": true,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 1290,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "0289f23e7a227002",
+        "type": "inject",
+        "z": "d174c87febf19daa",
+        "name": "trigger",
+        "props": [
+            {
+                "p": "ignore",
+                "v": "true",
+                "vt": "bool"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 150,
+        "y": 580,
+        "wires": [
+            [
+                "2f36024abc1c466d"
+            ]
+        ]
+    },
+    {
+        "id": "1f9ec6cadffe3229",
+        "type": "http request",
+        "z": "d174c87febf19daa",
+        "name": "Request-IED-node",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://192.168.6.187:33080/api/deploy/cloud",
+        "tls": "",
+        "persist": true,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "other",
+                "keyValue": "url",
+                "valueType": "other",
+                "valueValue": "192.168.6.188"
+            },
+            {
+                "keyType": "Accept",
+                "keyValue": "",
+                "valueType": "other",
+                "valueValue": "*/*"
+            },
+            {
+                "keyType": "Accept-Encoding",
+                "keyValue": "",
+                "valueType": "gzip, deflate, br",
+                "valueValue": ""
+            },
+            {
+                "keyType": "Authorization",
+                "keyValue": "",
+                "valueType": "other",
+                "valueValue": "ccab0e06604e072d2f81552b1bf0fba9"
+            }
+        ],
+        "x": 1090,
+        "y": 580,
+        "wires": [
+            [
+                "dbdccd8808144711"
+            ]
+        ]
+    },
+    {
+        "id": "2f36024abc1c466d",
+        "type": "exec",
+        "z": "d174c87febf19daa",
+        "command": "cat /home/nodered/node-red-home/node-red-flows/flows.json",
+        "addpay": "payload",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "extract flow.json",
+        "x": 460,
+        "y": 580,
+        "wires": [
+            [
+                "e5ca5a7e1c2e41f7"
+            ],
+            [],
+            []
+        ]
+    },
+    {
+        "id": "e5ca5a7e1c2e41f7",
+        "type": "function",
+        "z": "d174c87febf19daa",
+        "name": "Login-IEM",
+        "func": "let req = {\n    method:'POST',\n    payload: {\n        'iemUrl': '',\n        'username': '',\n        'password': '',\n        'flowData': JSON.parse(msg.payload),\n    }\n}\nreturn req;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 830,
+        "y": 580,
+        "wires": [
+            [
+                "1f9ec6cadffe3229"
+            ]
+        ]
+    },
+    {
+        "id": "5c7a81666745f633",
+        "type": "inject",
+        "z": "a97c989b840e71e2",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "2",
+        "payloadType": "num",
+        "x": 170,
+        "y": 160,
+        "wires": [
+            [
+                "29224649ac076d02"
+            ]
+        ]
+    },
+    {
+        "id": "29224649ac076d02",
+        "type": "function",
+        "z": "a97c989b840e71e2",
+        "name": "function 1",
+        "func": "msg.payload=msg.payload*2\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 160,
+        "wires": [
+            [
+                "85c5df7d60868230"
+            ]
+        ]
+    },
+    {
+        "id": "85c5df7d60868230",
+        "type": "function",
+        "z": "a97c989b840e71e2",
+        "name": "function 2",
+        "func": "msg.payload=msg.payload*2\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 220,
+        "wires": [
+            [
+                "10307f91f1a4b50d"
+            ]
+        ]
+    },
+    {
+        "id": "10307f91f1a4b50d",
+        "type": "function",
+        "z": "a97c989b840e71e2",
+        "name": "function 3",
+        "func": "msg.payload=msg.payload*2\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 280,
+        "wires": [
+            [
+                "82839c060fd82467"
+            ]
+        ]
+    },
+    {
+        "id": "82839c060fd82467",
+        "type": "function",
+        "z": "a97c989b840e71e2",
+        "name": "function 4",
+        "func": "msg.payload=msg.payload*2\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 340,
+        "wires": [
+            [
+                "49a6838edfc0c655"
+            ]
+        ]
+    },
+    {
+        "id": "49a6838edfc0c655",
+        "type": "function",
+        "z": "a97c989b840e71e2",
+        "name": "function 5",
+        "func": "msg.payload=msg.payload*2\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 400,
+        "wires": [
+            [
+                "9818a5749378c953"
+            ]
+        ]
+    },
+    {
+        "id": "9818a5749378c953",
+        "type": "function",
+        "z": "a97c989b840e71e2",
+        "name": "function 6",
+        "func": "msg.payload=msg.payload*2\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 660,
+        "y": 160,
+        "wires": [
+            [
+                "b7c9358164714f49"
+            ]
+        ]
+    },
+    {
+        "id": "b7c9358164714f49",
+        "type": "function",
+        "z": "a97c989b840e71e2",
+        "name": "function 7",
+        "func": "msg.payload=msg.payload*2\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 660,
+        "y": 220,
+        "wires": [
+            [
+                "581c84947021954b"
+            ]
+        ]
+    },
+    {
+        "id": "581c84947021954b",
+        "type": "function",
+        "z": "a97c989b840e71e2",
+        "name": "function 8",
+        "func": "msg.payload=msg.payload*2\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 660,
+        "y": 280,
+        "wires": [
+            [
+                "119adc60de785335"
+            ]
+        ]
+    },
+    {
+        "id": "119adc60de785335",
+        "type": "function",
+        "z": "a97c989b840e71e2",
+        "name": "function 9",
+        "func": "msg.payload=msg.payload*2\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 660,
+        "y": 340,
+        "wires": [
+            [
+                "4092d557f5d2b587"
+            ]
+        ]
+    },
+    {
+        "id": "4092d557f5d2b587",
+        "type": "function",
+        "z": "a97c989b840e71e2",
+        "name": "function 10",
+        "func": "msg.payload=msg.payload*2\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 400,
+        "wires": [
+            [
+                "383605d023257920"
+            ]
+        ]
+    },
+    {
+        "id": "383605d023257920",
+        "type": "link out",
+        "z": "a97c989b840e71e2",
+        "name": "from funciton 10",
+        "mode": "link",
+        "links": [
+            "5eccb79e911b88df"
+        ],
+        "x": 945,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "6a91f2a809749809",
+        "type": "inject",
+        "z": "f0bcc0f68da8658c",
+        "name": "",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 280,
+        "y": 420,
+        "wires": [
+            [
+                "5c8ee050bf45ee87"
+            ]
+        ]
+    },
+    {
+        "id": "22d29ed0702f4639",
+        "type": "debug",
+        "z": "f0bcc0f68da8658c",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "5c8ee050bf45ee87",
+        "type": "http request",
+        "z": "f0bcc0f68da8658c",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://192.168.6.187:33080/api/test",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 550,
+        "y": 420,
+        "wires": [
+            [
+                "22d29ed0702f4639"
+            ]
+        ]
+    }
+]
