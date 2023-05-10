@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const { login } = require("./services/iem");
 const { uploadApplicationIemCatlog, generateAppfile } = require("./services/iemUpload");
 const { generateComposeFile, generateProdComposeFile, generatePortNumber, generateFlowFile, cleanFlowJson } = require("./services/util");
+const { startTimer, stopTimer} = require("./services/logger");
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
@@ -24,7 +25,9 @@ app.post('/api/deploy/cloud', async (req, res) => {
   try {
     const { iemUrl, username, password, flowData } = req.body;
     // makes Login request to IEM
+    startTimer('Login');
     const loginAccess = await login(iemUrl, username, password);
+    stopTimer('Login');
     // fetches the access_token after sucessfull login to IEM
     const authorization = loginAccess['access_token'];
     //dynamically generates application id for IECTL command arguments
@@ -33,13 +36,22 @@ app.post('/api/deploy/cloud', async (req, res) => {
     const port = await generatePortNumber();
     const appName = `Nodered_${port}`;
     // generates flowfile with the json data from "Flow-creator" application
+    startTimer('generateFlowFile');
     await generateFlowFile(cleanFlowJson(flowData),appId);
+    stopTimer('generateFlowFile');
+    startTimer('generateComposeFile');
     await generateComposeFile(appName, port, appId)
+    stopTimer('generateComposeFile');
+    startTimer('generateProdComposeFile');
     const composePath = await generateProdComposeFile(appName, port, appId)
-
+    stopTimer('generateProdComposeFile');
+    startTimer('generateAppfile');
     const appFilePath = await generateAppfile({ ...req.body, composePath, appName, appId });
+    stopTimer('generateAppfile');
     console.log('APPFILE', appFilePath);
+    startTimer('uploadApplication');
     const data = await uploadApplicationIemCatlog(iemUrl, authorization, appFilePath)
+    stopTimer('uploadApplication');
     res.send(data);
   } catch (err) {
     res.status(500).send(err);
